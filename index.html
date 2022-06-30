@@ -23,18 +23,39 @@
 			</div>
 		</div>
 	</div>
+	    <div>
+        <select id="selectNumber">
+		select camera
+        </select>
+    </div>
     <script>
         let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
-        Instascan.Camera.getCameras().then(function (cameras) {
+
+        var select = document.getElementById("arr");
+        Instascan.Camera.getCameras().then(function(cameras) {
             if (cameras.length > 0) {
-                scanner.start(cameras[0]);
+
+                var select = document.getElementById("selectNumber");
+                var options = cameras;
+
+                for (var i = 0; i < cameras.length; i++) {
+                    var opt = options[i];
+                    var el = document.createElement("option");
+                    el.textContent = i;
+                    el.value = i;
+                    select.appendChild(el);
+                }
+                $('select').on('change', function() {
+                    scanner.start(cameras[this.value]);
+                });
+
             } else {
                 alert('No cameras Found');
             }
-        }).catch(function (e) {
+        }).catch(function(e) {
             console.error(e);
         });
-        scanner.addListener('scan', function (c) {
+        scanner.addListener('scan', function(c) {
             document.getElementById('text').value = c;
         });
     </script>
